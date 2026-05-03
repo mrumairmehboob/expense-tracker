@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Khata Book Pro | Umair Mehboob</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter',sans-serif;background:#f1f5f9;transition:all 0.3s}
+body.dark{background:#0f172a}
+.container{max-width:1100px;margin:20px auto;padding:0 20px}
+.header{background:linear-gradient(135deg,#10b981 0%,#059669 100%);color:#fff;padding:24px;border-radius:16px 16px 0 0;display:flex;justify-content:space-between;align-items:center}
+.header h1{font-size:1.8rem}
+.dark-toggle{background:rgba(255,255,255,0.2);border:none;color:#fff;padding:10px 16px;border-radius:8px;cursor:pointer;font-weight:600}
+.card{background:#fff;border-radius:12px;box-shadow:0 4px 16px rgba(0,0,0,0.08);overflow:hidden;margin-bottom:20px}
+body.dark.card{background:#1e293b}
+.summary{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:#e2e8f0}
+body.dark.summary{background:#334155}
+.sum-box{background:#fff;padding:24px;text-align:center}
+body.dark.sum-box{background:#1e293b}
+.sum-label{font-size:0.85rem;color:#64748b;margin-bottom:8px;font-weight:600}
+body.dark.sum-label{color:#94a3b8}
+.sum-value{font-size:2rem;font-weight:700}
+.income{color:#10b981}
+.expense{color:#ef4444}
+.balance{color:#3b82f6}
+.toolbar{background:#fff;padding:20px;border-bottom:1px solid #e2e8f0;display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+body.dark.toolbar{background:#1e293b;border-color:#334155}
+.toolbar input,.toolbar select{padding:10px 14px;border:2px solid #e2e8f0;border-radius:10px;font-size:0.9rem;flex:1;min-width:150px}
+body.dark.toolbar input,body.dark.toolbar select{background:#0f172a;border-color:#334155;color:#fff}
+.btn{padding:10px 20px;border:none;border-radius:10px;font-weight:600;cursor:pointer;font-size:0.9rem;transition:all 0.2s}
+.btn:hover{transform:translateY(-2px)}
+.btn-primary{background:#3b82f6;color:#fff}
+.btn-success{background:#10b981;color:#fff}
+.btn-danger{background:#ef4444;color:#fff}
+.form-box{padding:28px}
+.form-title{font-size:1.2rem;font-weight:700;color:#1e293b;margin-bottom:20px;display:flex;align-items:center;gap:10px}
+body.dark.form-title{color:#f1f5f9}
+.form-title::before{content:'';width:4px;height:24px;background:#10b981;border-radius:2px}
+.form-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:16px;margin-bottom:16px}
+.form-group{display:flex;flex-direction:column}
+.form-group label{font-size:0.85rem;font-weight:600;color:#475569;margin-bottom:8px}
+body.dark.form-group label{color:#cbd5e1}
+.form-group input,.form-group select{padding:12px 14px;border:2px solid #e2e8f0;border-radius:10px;font-size:0.95rem;background:#fff}
+body.dark.form-group input,body.dark.form-group select{background:#0f172a;border-color:#334155;color:#fff}
+.form-group input:focus{border-color:#10b981;outline:none;box-shadow:0 0 0 4px rgba(16,185,129,0.1)}
+.chart-box{padding:28px}
+.chart-container{position:relative;height:300px}
+.list-box{padding:28px}
+.entry{display:grid;grid-template-columns:auto 1fr auto auto;gap:16px;align-items:center;padding:16px;border-bottom:1px solid #f1f5f9;transition:all 0.2s}
+body.dark.entry{border-color:#334155}
+.entry:hover{background:#f8fafc}
+body.dark.entry:hover{background:#0f172a}
+.entry-icon{width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.5rem}
+.entry-icon.income{background:#d1fae5}
+.entry-icon.expense{background:#fee2e2}
+.entry-details{flex:1}
+.entry-name{font-weight:600;color:#0f172a;margin-bottom:4px;font-size:1rem}
+body.dark.entry-name{color:#f1f5f9}
+.entry-meta{font-size:0.8rem;color:#94a3b8;display:flex;gap:12px}
+.entry-amount{font-weight:700;font-size:1.2rem}
+.entry-amount.plus{color:#10b981}
+.entry-amount.minus{color:#ef4444}
+.entry-actions{display:flex;gap:8px}
+.btn-icon{background:#f1f5f9;border:none;padding:8px 12px;border-radius:8px;cursor:pointer;font-size:0.85rem}
+body.dark.btn-icon{background:#334155;color:#fff}
+.empty{text-align:center;padding:60px 20px;color:#94a3b8}
+.modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:9999;align-items:center;justify-content:center}
+.modal.show{display:flex}
+.modal-content{background:#fff;border-radius:16px;padding:32px;max-width:500px;width:90%}
+body.dark.modal-content{background:#1e293b}
+.credit-footer{text-align:center;padding:20px;font-size:0.85rem;color:#94a3b8;background:#f8fafc;border-top:1px solid #e2e8f0;margin-top:20px;border-radius:0 0 12px 12px}
+body.dark.credit-footer{background:#0f172a;border-color:#334155;color:#64748b}
+.credit-footer strong{color:#10b981}
+@media(max-width:768px){
+.summary{grid-template-columns:1fr}
+.form-grid{grid-template-columns:1fr}
+.toolbar{flex-direction:column}
+.toolbar input,.toolbar select{width:100%}
+.entry{grid-template-columns:auto 1fr}
+.entry-actions{grid-column:1/-1;justify-content:flex-end}
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="header">
+    <div>
+      <h1>💰 Khata Book Pro</h1>
+      <p style="opacity:0.9;font-size:0.9rem">Professional Income & Expense Manager</p>
+    </div>
+    <button class="dark-toggle" onclick="toggleDark()">🌙 Dark</button>
+  </div>
+
+  <div class="card">
+    <div class="summary">
+      <div class="sum-box">
+        <div class="sum-label">TOTAL INCOME</div>
+        <div class="sum-value income" id="totalIncome">Rs. 0</div>
+      </div>
+      <div class="sum-box">
+        <div class="sum-label">TOTAL EXPENSE</div>
+        <div class="sum-value expense" id="totalExpense">Rs. 0</div>
+      </div>
+      <div class="sum-box">
+        <div class="sum-label">BALANCE</div>
+        <div class="sum-value balance" id="totalBalance">Rs. 0</div>
+      </div>
+    </div>
+
+    <div class="toolbar">
+      <input type="text" id="searchBox" placeholder="🔍 Search entries..." oninput="renderEntries()">
+      <select id="filterMonth" onchange="renderEntries()">
+        <option value="">All Months</option>
+      </select>
+      <select id="filterCategory" onchange="renderEntries()">
+        <option value="">All Categories</option>
+        <option value="Salary">Salary</option>
+        <option value="Food">Food</option>
+        <option value="Rent">Rent</option>
+        <option value="Transport">Transport</option>
+        <option value="Shopping">Shopping</option>
+        <option value="Bills">Bills</option>
+        <option value="Other">Other</option>
+      </select>
+      <button class="btn btn-success" onclick="exportData()">📥 Export</button>
+    </div>
+
+    <div class="form-box">
+      <div class="form-title">Add New Entry</div>
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Description</label>
+          <input type="text" id="desc" placeholder="e.g. Monthly Salary">
+        </div>
+        <div class="form-group">
+          <label>Amount (Rs.)</label>
+          <input type="number" id="amount" placeholder="0">
+        </div>
+        <div class="form-group">
+          <label>Category</label>
+          <select id="category">
+            <option value="Salary">Salary</option>
+            <option value="Food">Food</option>
+            <option value="Rent">Rent</option>
+            <option value="Transport">Transport</option>
+            <option value="Shopping">Shopping</option>
+            <option value="Bills">Bills</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Type</label>
+          <select id="type">
+            <option value="income">💰 Income</option>
+            <option value="expense">💸 Expense</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-grid" style="grid-template-columns:1fr 1fr">
+        <div class="form-group">
+          <label>Date</label>
+          <input type="date" id="date">
+        </div>
+        <div class="form-group">
+          <label>Notes (Optional)</label>
+          <input type="text" id="notes" placeholder="Add notes...">
+        </div>
+      </div>
+      <button class="btn btn-primary" style="width:100%;padding:14px;font-size:1rem" onclick="addEntry()">➕ Add Entry</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="chart-box">
+      <div class="form-title">Expense Breakdown by Category</div>
+      <div class="chart-container">
+        <canvas id="pieChart"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="list-box">
+      <div class="form-title">Recent Transactions</div>
+      <div id="entriesList"></div>
+    </div>
+    <div class="credit-footer">
+      Generated by <strong>Umair Mehboob</strong>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="editModal">
+  <div class="modal-content">
+    <h3 style="margin-bottom:20px">Edit Entry</h3>
+    <div class="form-group" style="margin-bottom:12px">
+      <label>Description</label>
+      <input type="text" id="editDesc">
+    </div>
+    <div class="form-group" style="margin-bottom:12px">
+      <label>Amount</label>
+      <input type="number" id="editAmount">
+    </div>
+    <div style="display:flex;gap:12px;margin-top:20px">
+      <button class="btn btn-primary" style="flex:1" onclick="saveEdit()">Save</button>
+      <button class="btn btn-danger" style="flex:1" onclick="closeEdit()">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<script>
+var entries = [];
+var editId = null;
+var chart = null;
+
+document.getElementById('date').valueAsDate = new Date();
+loadData();
+initChart();
+
+function addEntry(){
+  var desc = document.getElementById('desc').value.trim();
+  var amount = parseFloat(document.getElementById('amount').value);
+  var date = document.getElementById('date').value;
+  var type = document.getElementById('type').value;
+  var category = document.getElementById('category').value;
+  var notes = document.getElementById('notes').value.trim();
+
+  if(!desc ||!amount || amount <= 0){
+    alert('Please fill description and amount');
+    return;
+  }
+
+  var entry = {
+    id: Date.now(),
+    desc: desc,
+    amount: amount,
+    date: date,
+    type: type,
+    category: category,
+    notes: notes
+  };
+
+  entries.unshift(entry);
+  saveData();
+  renderEntries();
+  clearForm();
+  updateChart();
+}
+
+function deleteEntry(id){
+  if(confirm('Delete this entry?')){
+    entries = entries.filter(function(e){ return e.id!== id });
+    saveData();
+    renderEntries();
+    updateChart();
+  }
+}
+
+function editEntry(id){
+  var entry = entries.find(function(e){ return e.id === id });
+  if(entry){
+    editId = id;
+    document.getElementById('editDesc').value = entry.desc;
+    document.getElementById('editAmount').value = entry.amount;
+    document.getElementById('editModal').classList.add('show');
+  }
+}
+
+function saveEdit(){
+  var entry = entries.find(function(e){ return e.id === editId });
+  if(entry){
+    entry.desc = document.getElementById('editDesc').value;
+    entry.amount = parseFloat(document.getElementById('editAmount').value);
+    saveData();
+    renderEntries();
+    updateChart();
+    closeEdit();
+  }
+}
+
+function closeEdit(){
+  document.getElementById('editModal').classList.remove('show');
+  editId = null;
+}
+
+function renderEntries(){
+  var list = document.getElementById('entriesList');
+  var search = document.getElementById('searchBox').value.toLowerCase();
+  var monthFilter = document.getElementById('filterMonth').value;
+  var catFilter = document.getElementById('filterCategory').value;
+
+  var filtered = entries.filter(function(e){
+    var matchSearch = e.desc.toLowerCase().indexOf(search)!== -1 || e.notes.toLowerCase().indexOf(search)!== -1;
+    var matchMonth =!monthFilter || e.date.startsWith(monthFilter);
+    var matchCat =!catFilter || e.category === catFilter;
+    return matchSearch && matchMonth && matchCat;
+  });
+
+  var income = 0;
+  var expense = 0;
+
+  if(filtered.length === 0){
+    list.innerHTML = '<div class="empty">📭 No entries found</div>';
+  } else {
+    var html = '';
+    for(var i=0;i<filtered.length;i++){
+      var e = filtered[i];
+      var isIncome = e.type === 'income';
+      if(isIncome){ income += e.amount } else { expense += e.amount }
+
+      var icon = isIncome? '💰' : '💸';
+      html += '<div class="entry">'+
+              '<div class="entry-icon '+(isIncome?'income':'expense')+'">'+icon+'</div>'+
+              '<div class="entry-details">'+
+              '<div class="entry-name">'+e.desc+'</div>'+
+              '<div class="entry-meta">'+
+              '<span>📅 '+e.date+'</span>'+
+              '<span>🏷️ '+e.category+'</span>'+
+              (e.notes?'<span>📝 '+e.notes+'</span>':'')+
+              '</div>'+
+              '</div>'+
+              '<div class="entry-amount '+(isIncome?'plus':'minus')+'">'+
+              (isIncome?'+':'-')+' Rs. '+e.amount.toLocaleString()+
+              '</div>'+
+              '<div class="entry-actions">'+
+              '<button class="btn-icon" onclick="editEntry('+e.id+')">✏️</button>'+
+              '<button class="btn-icon" onclick="deleteEntry('+e.id+')">🗑️</button>'+
+              '</div>'+
+              '</div>';
+    }
+    list.innerHTML = html;
+  }
+
+  var totalIncome = 0, totalExpense = 0;
+  for(var i=0;i<entries.length;i++){
+    if(entries[i].type === 'income') totalIncome += entries[i].amount;
+    else totalExpense += entries[i].amount;
+  }
+
+  document.getElementById('totalIncome').textContent = 'Rs. ' + totalIncome.toLocaleString();
+  document.getElementById('totalExpense').textContent = 'Rs. ' + totalExpense.toLocaleString();
+  document.getElementById('totalBalance').textContent = 'Rs. ' + (totalIncome - totalExpense).toLocaleString();
+
+  updateMonthFilter();
+}
+
+function updateMonthFilter(){
+  var months = {};
+  for(var i=0;i<entries.length;i++){
+    var month = entries[i].date.substring(0,7);
+    months[month] = true;
+  }
+  var select = document.getElementById('filterMonth');
+  var current = select.value;
+  select.innerHTML = '<option value="">All Months</option>';
+  var keys = Object.keys(months).sort().reverse();
+  for(var i=0;i<keys.length;i++){
+    select.innerHTML += '<option value="'+keys[i]+'">'+keys[i]+'</option>';
+  }
+  select.value = current;
+}
+
+function clearForm(){
+  document.getElementById('desc').value = '';
+  document.getElementById('amount').value = '';
+  document.getElementById('notes').value = '';
+  document.getElementById('date').valueAsDate = new Date();
+}
+
+function saveData(){
+  localStorage.setItem('khataProEntries', JSON.stringify(entries));
+}
+
+function loadData(){
+  var data = localStorage.getItem('khataProEntries');
+  if(data){
+    entries = JSON.parse(data);
+  }
+  renderEntries();
+}
+
+function initChart(){
+  var ctx = document.getElementById('pieChart').getContext('2d');
+  chart = new Chart(ctx, {
+    type: 'doughnut',
+    data: {
+      labels: [],
+      datasets: [{
+        data: [],
+        backgroundColor: ['#10b981','#3b82f6','#f59e0b','#ef4444','#8b5cf6','#ec4899','#06b6d4']
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { position: 'bottom' }
+      }
+    }
+  });
+  updateChart();
+}
+
+function updateChart(){
+  var categories = {};
+  for(var i=0;i<entries.length;i++){
+    if(entries[i].type === 'expense'){
+      categories[entries[i].category] = (categories[entries[i].category] || 0) + entries[i].amount;
+    }
+  }
+  chart.data.labels = Object.keys(categories);
+  chart.data.datasets[0].data = Object.values(categories);
+  chart.update();
+}
+
+function exportData(){
+  var csv = 'Date,Description,Category,Type,Amount,Notes\n';
+  for(var i=0;i<entries.length;i++){
+    var e = entries[i];
+    csv += e.date+',"'+e.desc+'",'+e.category+','+e.type+','+e.amount+',"'+e.notes+'"\n';
+  }
+  var blob = new Blob([csv], {type:'text/csv'});
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a');
+  a.href = url;
+  a.download = 'khata-book-'+new Date().toISOString().split('T')[0]+'.csv';
+  a.click();
+}
+
+function toggleDark(){
+  document.body.classList.toggle('dark');
+  localStorage.setItem('darkMode', document.body.classList.contains('dark'));
+}
+
+if(localStorage.getItem('darkMode') === 'true'){
+  document.body.classList.add('dark');
+}
+</script>
+</body>
+            </html>
