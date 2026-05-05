@@ -4,6 +4,11 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Khata Book Pro | Umair Mehboob</title>
+<!-- PWA Meta Tags -->
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#10b981">
+<link rel="apple-touch-icon" href="icon.svg">
+
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <style>
@@ -15,21 +20,21 @@ body.dark{background:#0f172a}
 .header h1{font-size:1.8rem}
 .dark-toggle{background:rgba(255,255,255,0.2);border:none;color:#fff;padding:10px 16px;border-radius:8px;cursor:pointer;font-weight:600}
 .card{background:#fff;border-radius:12px;box-shadow:0 4px 16px rgba(0,0,0,0.08);overflow:hidden;margin-bottom:20px}
-body.dark.card{background:#1e293b}
+body.dark .card{background:#1e293b}
 .summary{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:#e2e8f0}
-body.dark.summary{background:#334155}
+body.dark .summary{background:#334155}
 .sum-box{background:#fff;padding:24px;text-align:center}
-body.dark.sum-box{background:#1e293b}
+body.dark .sum-box{background:#1e293b}
 .sum-label{font-size:0.85rem;color:#64748b;margin-bottom:8px;font-weight:600}
-body.dark.sum-label{color:#94a3b8}
+body.dark .sum-label{color:#94a3b8}
 .sum-value{font-size:2rem;font-weight:700}
 .income{color:#10b981}
 .expense{color:#ef4444}
 .balance{color:#3b82f6}
 .toolbar{background:#fff;padding:20px;border-bottom:1px solid #e2e8f0;display:flex;gap:12px;flex-wrap:wrap;align-items:center}
-body.dark.toolbar{background:#1e293b;border-color:#334155}
+body.dark .toolbar{background:#1e293b;border-color:#334155}
 .toolbar input,.toolbar select{padding:10px 14px;border:2px solid #e2e8f0;border-radius:10px;font-size:0.9rem;flex:1;min-width:150px}
-body.dark.toolbar input,body.dark.toolbar select{background:#0f172a;border-color:#334155;color:#fff}
+body.dark .toolbar input,body.dark .toolbar select{background:#0f172a;border-color:#334155;color:#fff}
 .btn{padding:10px 20px;border:none;border-radius:10px;font-weight:600;cursor:pointer;font-size:0.9rem;transition:all 0.2s}
 .btn:hover{transform:translateY(-2px)}
 .btn-primary{background:#3b82f6;color:#fff}
@@ -37,42 +42,42 @@ body.dark.toolbar input,body.dark.toolbar select{background:#0f172a;border-color
 .btn-danger{background:#ef4444;color:#fff}
 .form-box{padding:28px}
 .form-title{font-size:1.2rem;font-weight:700;color:#1e293b;margin-bottom:20px;display:flex;align-items:center;gap:10px}
-body.dark.form-title{color:#f1f5f9}
+body.dark .form-title{color:#f1f5f9}
 .form-title::before{content:'';width:4px;height:24px;background:#10b981;border-radius:2px}
 .form-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:16px;margin-bottom:16px}
 .form-group{display:flex;flex-direction:column}
 .form-group label{font-size:0.85rem;font-weight:600;color:#475569;margin-bottom:8px}
-body.dark.form-group label{color:#cbd5e1}
+body.dark .form-group label{color:#cbd5e1}
 .form-group input,.form-group select{padding:12px 14px;border:2px solid #e2e8f0;border-radius:10px;font-size:0.95rem;background:#fff}
-body.dark.form-group input,body.dark.form-group select{background:#0f172a;border-color:#334155;color:#fff}
+body.dark .form-group input,body.dark .form-group select{background:#0f172a;border-color:#334155;color:#fff}
 .form-group input:focus{border-color:#10b981;outline:none;box-shadow:0 0 0 4px rgba(16,185,129,0.1)}
 .chart-box{padding:28px}
 .chart-container{position:relative;height:300px}
 .list-box{padding:28px}
 .entry{display:grid;grid-template-columns:auto 1fr auto auto;gap:16px;align-items:center;padding:16px;border-bottom:1px solid #f1f5f9;transition:all 0.2s}
-body.dark.entry{border-color:#334155}
+body.dark .entry{border-color:#334155}
 .entry:hover{background:#f8fafc}
-body.dark.entry:hover{background:#0f172a}
+body.dark .entry:hover{background:#0f172a}
 .entry-icon{width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.5rem}
 .entry-icon.income{background:#d1fae5}
 .entry-icon.expense{background:#fee2e2}
 .entry-details{flex:1}
 .entry-name{font-weight:600;color:#0f172a;margin-bottom:4px;font-size:1rem}
-body.dark.entry-name{color:#f1f5f9}
+body.dark .entry-name{color:#f1f5f9}
 .entry-meta{font-size:0.8rem;color:#94a3b8;display:flex;gap:12px}
 .entry-amount{font-weight:700;font-size:1.2rem}
 .entry-amount.plus{color:#10b981}
 .entry-amount.minus{color:#ef4444}
 .entry-actions{display:flex;gap:8px}
 .btn-icon{background:#f1f5f9;border:none;padding:8px 12px;border-radius:8px;cursor:pointer;font-size:0.85rem}
-body.dark.btn-icon{background:#334155;color:#fff}
+body.dark .btn-icon{background:#334155;color:#fff}
 .empty{text-align:center;padding:60px 20px;color:#94a3b8}
 .modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:9999;align-items:center;justify-content:center}
 .modal.show{display:flex}
 .modal-content{background:#fff;border-radius:16px;padding:32px;max-width:500px;width:90%}
-body.dark.modal-content{background:#1e293b}
+body.dark .modal-content{background:#1e293b}
 .credit-footer{text-align:center;padding:20px;font-size:0.85rem;color:#94a3b8;background:#f8fafc;border-top:1px solid #e2e8f0;margin-top:20px;border-radius:0 0 12px 12px}
-body.dark.credit-footer{background:#0f172a;border-color:#334155;color:#64748b}
+body.dark .credit-footer{background:#0f172a;border-color:#334155;color:#64748b}
 .credit-footer strong{color:#10b981}
 @media(max-width:768px){
 .summary{grid-template-columns:1fr}
@@ -215,6 +220,17 @@ body.dark.credit-footer{background:#0f172a;border-color:#334155;color:#64748b}
 var entries = [];
 var editId = null;
 var chart = null;
+
+// PWA: Service Worker Registration
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function() {
+    navigator.serviceWorker.register('sw.js').then(function(registration) {
+      console.log('ServiceWorker registration successful');
+    }, function(err) {
+      console.log('ServiceWorker registration failed: ', err);
+    });
+  });
+}
 
 document.getElementById('date').valueAsDate = new Date();
 loadData();
@@ -440,4 +456,4 @@ if(localStorage.getItem('darkMode') === 'true'){
 }
 </script>
 </body>
-            </html>
+</html>
